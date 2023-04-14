@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 public class PBKDF2NGTest
 {
 	@Test
-	public void testSomeMethod() throws NoSuchAlgorithmException, InvalidKeySpecException
+	public void testCompatibleWithOracleImplementation() throws NoSuchAlgorithmException, InvalidKeySpecException
 	{
 		String password = "pw";
 		byte[] salt = "salt-salt-salt-salt-salt-salt".getBytes();

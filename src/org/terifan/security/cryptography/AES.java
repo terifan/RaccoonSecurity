@@ -133,6 +133,13 @@ public final class AES implements BlockCipher
 
 
 	@Override
+	public boolean isInitialized()
+	{
+		return ke != null;
+	}
+
+
+	@Override
 	public void engineInit(SecretKey aKey)
 	{
 		byte[] k = aKey.bytes();

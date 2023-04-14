@@ -13,6 +13,9 @@ public class SHA3NGTest
 	{
 		MessageDigest digest = new SHA3(aLength);
 
+		digest.update("dummy".getBytes()); // result ignored
+		digest.digest();
+
 		digest.update(aInput);
 		byte[] out = digest.digest();
 

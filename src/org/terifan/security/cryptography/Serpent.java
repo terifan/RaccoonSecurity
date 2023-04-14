@@ -39,6 +39,7 @@ public class Serpent implements BlockCipher
 		k104, k105, k106, k107, k108, k109, k110, k111, k112, k113, k114,
 		k115, k116, k117, k118, k119, k120, k121, k122, k123, k124, k125,
 		k126, k127, k128, k129, k130, k131;
+	private boolean mInitialized;
 
 	public Serpent()
 	{
@@ -52,9 +53,18 @@ public class Serpent implements BlockCipher
 
 
 	@Override
+	public boolean isInitialized()
+	{
+		return mInitialized;
+	}
+
+
+	@Override
 	public void engineInit(SecretKey aKey)
 	{
 		engineReset();
+
+		mInitialized = true;
 
 		byte[] kb = aKey.bytes();
 
@@ -1114,6 +1124,8 @@ public class Serpent implements BlockCipher
 	@Override
 	public void engineReset()
 	{
+		mInitialized = false;
+
 		k0 = k1 = k2 = k3 = k4 = k5 = k6 = k7 = k8 = k9 = k10 = k11 = k12 = k13
 			= k14 = k15 = k16 = k17 = k18 = k19 = k20 = k21 = k22 = k23 = k24 = k25 = k26
 			= k27 = k28 = k29 = k30 = k31 = k32 = k33 = k34 = k35 = k36 = k37 = k38 = k39

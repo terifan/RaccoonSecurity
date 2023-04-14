@@ -3,6 +3,9 @@ package org.terifan.security.cryptography;
 
 public interface BlockCipher
 {
+	boolean isInitialized();
+
+
 	void engineInit(SecretKey aSecretKey);
 
 

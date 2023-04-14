@@ -1,5 +1,6 @@
-package org.terifan.security.cryptography;
+package org.terifan.security.messagedigest;
 
+import org.terifan.security.cryptography.PBKDF2;
 import org.terifan.security.messagedigest.HMAC;
 
 /**

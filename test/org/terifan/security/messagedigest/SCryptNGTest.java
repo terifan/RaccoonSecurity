@@ -1,5 +1,6 @@
-package org.terifan.security.cryptography;
+package org.terifan.security.messagedigest;
 
+import org.terifan.security.messagedigest.SCrypt;
 import java.util.HexFormat;
 import org.terifan.security.messagedigest.HMAC;
 import org.terifan.security.messagedigest.SHA512;

@@ -1,8 +1,7 @@
-package org.terifan.security.cryptography;
+package org.terifan.security.cryptography.ciphermode;
 
-import static org.terifan.security.cryptography.ByteArrayUtil.getInt64LE;
-import static org.terifan.security.cryptography.ByteArrayUtil.putInt64LE;
-import static org.terifan.security.cryptography.ByteArrayUtil.xor;
+import org.terifan.security.cryptography.BlockCipher;
+import static org.terifan.security.cryptography.ciphermode.ByteArrayUtil.*;
 
 
 /**
@@ -20,7 +19,7 @@ public final class XTSCipherMode extends CipherMode
 
 
 	@Override
-	public void encrypt(final byte[] aBuffer, int aOffset, final int aLength, final BlockCipher aCipher, long aStartDataUnitNo, final int aUnitSize, final long[] aMasterIV, final long[] aBlockIV, BlockCipher aTweakCipher)
+	public void encrypt(final byte[] aBuffer, int aOffset, final int aLength, final BlockCipher aCipher, long aStartDataUnitNo, final int aUnitSize, final int[] aBlockIV, BlockCipher aTweakCipher)
 	{
 		assert (aUnitSize & (BYTES_PER_BLOCK - 1)) == 0;
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
@@ -33,7 +32,7 @@ public final class XTSCipherMode extends CipherMode
 
 		for (int unitIndex = 0; unitIndex < numUnits; unitIndex++)
 		{
-			prepareIV(aMasterIV, aBlockIV, aStartDataUnitNo++, whiteningValue, aTweakCipher);
+			prepareIV(aBlockIV, aStartDataUnitNo++, whiteningValue, aTweakCipher);
 
 			for (int block = 0; block < numBlocks; block++, aOffset += BYTES_PER_BLOCK)
 			{
@@ -61,7 +60,7 @@ public final class XTSCipherMode extends CipherMode
 
 
 	@Override
-	public void decrypt(final byte[] aBuffer, int aOffset, final int aLength, final BlockCipher aCipher, long aStartDataUnitNo, final int aUnitSize, final long[] aMasterIV, final long[] aBlockIV, BlockCipher aTweakCipher)
+	public void decrypt(final byte[] aBuffer, int aOffset, final int aLength, final BlockCipher aCipher, long aStartDataUnitNo, final int aUnitSize, final int[] aBlockIV, BlockCipher aTweakCipher)
 	{
 		assert (aUnitSize & (BYTES_PER_BLOCK - 1)) == 0;
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
@@ -74,7 +73,7 @@ public final class XTSCipherMode extends CipherMode
 
 		for (int unitIndex = 0; unitIndex < numUnits; unitIndex++)
 		{
-			prepareIV(aMasterIV, aBlockIV, aStartDataUnitNo++, whiteningValue, aTweakCipher);
+			prepareIV(aBlockIV, aStartDataUnitNo++, whiteningValue, aTweakCipher);
 
 			for (int block = 0; block < numBlocks; block++, aOffset += BYTES_PER_BLOCK)
 			{
@@ -98,5 +97,33 @@ public final class XTSCipherMode extends CipherMode
 				whiteningValue[0] ^= finalCarry;
 			}
 		}
+	}
+
+
+	// little endian
+	private static void putInt64LE(byte[] aBuffer, int aOffset, long aValue)
+	{
+		aBuffer[aOffset] = (byte)(aValue);
+		aBuffer[aOffset + 1] = (byte)(aValue >>> 8);
+		aBuffer[aOffset + 2] = (byte)(aValue >>> 16);
+		aBuffer[aOffset + 3] = (byte)(aValue >>> 24);
+		aBuffer[aOffset + 4] = (byte)(aValue >>> 32);
+		aBuffer[aOffset + 5] = (byte)(aValue >>> 40);
+		aBuffer[aOffset + 6] = (byte)(aValue >>> 48);
+		aBuffer[aOffset + 7] = (byte)(aValue >>> 56);
+	}
+
+
+	// little endian
+	private static long getInt64LE(byte[] aBuffer, int aOffset)
+	{
+		return ((0xFF & aBuffer[aOffset]))
+			+ ((0xFF & aBuffer[aOffset + 1]) << 8)
+			+ ((0xFF & aBuffer[aOffset + 2]) << 16)
+			+ ((long)(0xFF & aBuffer[aOffset + 3]) << 24)
+			+ ((long)(0xFF & aBuffer[aOffset + 4]) << 32)
+			+ ((long)(0xFF & aBuffer[aOffset + 5]) << 40)
+			+ ((long)(0xFF & aBuffer[aOffset + 6]) << 48)
+			+ ((long)(0xFF & aBuffer[aOffset + 7]) << 56);
 	}
 }

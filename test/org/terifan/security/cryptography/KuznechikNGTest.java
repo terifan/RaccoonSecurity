@@ -26,4 +26,18 @@ public class KuznechikNGTest
 		assertEquals(encrypted, cipherText);
 		assertEquals(decrypted, plainTex);
 	}
+
+
+	@Test
+	public void testInitialized()
+	{
+		BlockCipher cipher = new Kuznechik();
+		assertFalse(cipher.isInitialized());
+		cipher.engineInit(new SecretKey(new byte[32]));
+		assertTrue(cipher.isInitialized());
+		cipher.engineReset();
+		assertFalse(cipher.isInitialized());
+		cipher.engineInit(new SecretKey(new byte[32]));
+		assertTrue(cipher.isInitialized());
+	}
 }

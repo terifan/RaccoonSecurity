@@ -1,9 +1,14 @@
-package org.terifan.security.cryptography;
+package org.terifan.security.cryptography.ciphermode;
 
+import org.terifan.security.cryptography.AES;
+import org.terifan.security.cryptography.Kuznechik;
+import org.terifan.security.cryptography.Serpent;
+import org.terifan.security.cryptography.Twofish;
+import org.terifan.security.cryptography.ciphermode.PCBCCipherMode;
 import org.testng.annotations.Test;
 
 
-public class PCBCCipherModeNGTest extends CipherModeNGTest
+public class PCBCCipherModeNGTest extends CipherModeHelper
 {
 	@Test
 	public void testEncryption()

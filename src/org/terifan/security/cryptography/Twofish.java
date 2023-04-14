@@ -126,6 +126,13 @@ public final class Twofish implements BlockCipher
 
 
 	@Override
+	public boolean isInitialized()
+	{
+		return mSBox != null;
+	}
+
+
+	@Override
 	public void engineInit(SecretKey aKey)
 	{
 		byte[] k = aKey.bytes();
@@ -983,15 +990,7 @@ public final class Twofish implements BlockCipher
 	{
 		if (mSBox != null)
 		{
-			Arrays.fill(mSBox, -1);
-		}
-		if (mSBox != null)
-		{
 			Arrays.fill(mSBox, 0);
-		}
-		if (mSubKeys != null)
-		{
-			Arrays.fill(mSubKeys, -1);
 		}
 		if (mSubKeys != null)
 		{
