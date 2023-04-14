@@ -21,7 +21,7 @@ package org.terifan.security.cryptography;
  * @author Raif S. Naffah
  * @author Serpent authors (Ross Anderson, Eli Biham and Lars Knudsen)
  */
-public class Serpent implements BlockCipher
+public final class Serpent implements BlockCipher
 {
 	private static final int ROUNDS = 32;
 

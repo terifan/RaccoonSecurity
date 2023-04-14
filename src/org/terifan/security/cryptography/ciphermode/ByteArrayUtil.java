@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 final class ByteArrayUtil
 {
-	public static void xor(byte[] aBuffer, int aOffset, int aLength, byte[] aMask, int aMaskOffset)
+	static void xor(byte[] aBuffer, int aOffset, int aLength, byte[] aMask, int aMaskOffset)
 	{
 		for (int i = 0; i < aLength; i++)
 		{
@@ -16,7 +16,7 @@ final class ByteArrayUtil
 	}
 
 
-	public static int getInt32(byte[] aBuffer, int aPosition)
+	static int getInt32(byte[] aBuffer, int aPosition)
 	{
 		return ((aBuffer[aPosition] & 0xFF) << 24)
 			+ ((aBuffer[aPosition + 1] & 0xFF) << 16)
@@ -25,7 +25,7 @@ final class ByteArrayUtil
 	}
 
 
-	public static void putInt32(byte[] aBuffer, int aPosition, int aValue)
+	static void putInt32(byte[] aBuffer, int aPosition, int aValue)
 	{
 		aBuffer[aPosition++] = (byte)(aValue >>> 24);
 		aBuffer[aPosition++] = (byte)(aValue >> 16);
@@ -34,7 +34,7 @@ final class ByteArrayUtil
 	}
 
 
-	public static void copyInt32(byte[] aIn, int aInOffset, int[] aOut, int aOutOffset, int aNumInts)
+	static void copyInt32(byte[] aIn, int aInOffset, int[] aOut, int aOutOffset, int aNumInts)
 	{
 		for (int i = 0; i < aNumInts; i++, aInOffset+=4)
 		{
@@ -43,7 +43,7 @@ final class ByteArrayUtil
 	}
 
 
-	public static void copyInt32(int[] aIn, int aInOffset, byte[] aOut, int aOutOffset, int aNumInts)
+	static void copyInt32(int[] aIn, int aInOffset, byte[] aOut, int aOutOffset, int aNumInts)
 	{
 		for (int i = 0; i < aNumInts; i++, aOutOffset+=4, aInOffset++)
 		{
@@ -52,7 +52,7 @@ final class ByteArrayUtil
 	}
 
 
-	public static void hexDump(byte[] aData)
+	static void hexDump(byte[] aData)
 	{
 		int width = 32;
 		int length = aData.length;

@@ -930,9 +930,7 @@ public final class Twofish implements BlockCipher
 		int b = (x >>> 24) & 0xFF;
 		int g2 = ((b << 1) ^ ((b & 0x80) != 0 ? 0x14D : 0)) & 0xFF;
 		int g3 = (b >>> 1) ^ ((b & 0x01) != 0 ? (0x14D >>> 1) : 0) ^ g2;
-		int result = (x << 8) ^ (g3 << 24) ^ (g2 << 16) ^ (g3 << 8) ^ b;
-
-		return result;
+		return (x << 8) ^ (g3 << 24) ^ (g2 << 16) ^ (g3 << 8) ^ b;
 	}
 
 

@@ -9,7 +9,7 @@ import org.terifan.security.messagedigest.HMAC;
  *
  * https://github.com/wg/scrypt/tree/master/src/main/java/com/lambdaworks/crypto
  */
-public class SCrypt
+public final class SCrypt
 {
 	public static byte[] generate(HMAC aHmac, byte[] aSalt, int aCost, int aRounds, int aParallelization, int aIterationCount, int aOutputLength)
 	{
