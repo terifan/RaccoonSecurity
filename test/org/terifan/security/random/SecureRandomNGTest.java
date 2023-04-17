@@ -114,4 +114,19 @@ public class SecureRandomNGTest
 		System.out.println(min);
 		System.out.println(max);
 	}
+
+
+	@Test
+	public void testNextBytes()
+	{
+		SecureRandom prng = new SecureRandom(1);
+		byte[] array = new byte[10];
+		prng.nextBytes(array, 0, 10);
+
+		prng = new SecureRandom(1);
+		byte[] bytes = prng.bytes(10).toArray();
+
+		assertEquals(array, bytes);
+		assertEquals(array, new byte[]{108,112,-30,9,98,-7,78,106,14,93});
+	}
 }

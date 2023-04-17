@@ -123,6 +123,8 @@ public final class SecureRandom
 		return new BytePipeline()
 		{
 			int remaining = aLength;
+			int buffer;
+			int length;
 
 
 			@Override
@@ -130,7 +132,13 @@ public final class SecureRandom
 			{
 				if (remaining > 0)
 				{
-					aConsumer.accept((byte)nextInt());
+					if (length == 0)
+					{
+						buffer = nextInt();
+						length = 32;
+					}
+					length -= 8;
+					aConsumer.accept((byte)(buffer >>> length));
 					return --remaining >= 0;
 				}
 				return false;
@@ -213,5 +221,22 @@ public final class SecureRandom
 		}
 
 		return output;
+	}
+
+
+	public void nextBytes(byte[] aArray, int aOffset, int aLength)
+	{
+		int buffer = 0;
+		int length = 0;
+		for (int i = 0; i < aLength; i++)
+		{
+			if (length == 0)
+			{
+				buffer = nextInt();
+				length = 32;
+			}
+			length -= 8;
+			aArray[aOffset++] = (byte)(buffer >>> length);
+		}
 	}
 }
