@@ -21,10 +21,12 @@ public final class XTSCipherMode extends CipherMode
 	@Override
 	public void encrypt(final byte[] aBuffer, int aOffset, final int aLength, final BlockCipher aCipher, long aStartDataUnitNo, final int aUnitSize, final int[] aBlockIV, BlockCipher aTweakCipher)
 	{
+		assert aUnitSize > 0;
 		assert (aUnitSize & (BYTES_PER_BLOCK - 1)) == 0;
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
 		assert aLength >= aUnitSize : aLength+" >= "+aUnitSize;
 		assert (aLength % aUnitSize) == 0;
+		assert aBlockIV.length == 4;
 
 		byte[] whiteningValue = new byte[BYTES_PER_BLOCK];
 		int numBlocks = aUnitSize / BYTES_PER_BLOCK;
@@ -66,6 +68,7 @@ public final class XTSCipherMode extends CipherMode
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
 		assert aLength >= aUnitSize;
 		assert (aLength % aUnitSize) == 0;
+		assert aBlockIV.length == 4;
 
 		byte[] whiteningValue = new byte[BYTES_PER_BLOCK];
 		int numUnits = aLength / aUnitSize;
