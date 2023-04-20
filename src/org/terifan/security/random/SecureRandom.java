@@ -224,6 +224,12 @@ public final class SecureRandom
 	}
 
 
+	public void nextBytes(byte[] aArray)
+	{
+		nextBytes(aArray, 0, aArray.length);
+	}
+
+
 	public void nextBytes(byte[] aArray, int aOffset, int aLength)
 	{
 		int buffer = 0;
