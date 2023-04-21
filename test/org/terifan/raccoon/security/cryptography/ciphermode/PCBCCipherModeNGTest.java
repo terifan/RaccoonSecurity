@@ -1,10 +1,9 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import org.terifan.security.cryptography.AES;
-import org.terifan.security.cryptography.Kuznechik;
-import org.terifan.security.cryptography.Serpent;
-import org.terifan.security.cryptography.Twofish;
-import org.terifan.security.cryptography.ciphermode.PCBCCipherMode;
+import org.terifan.raccoon.security.cryptography.AES;
+import org.terifan.raccoon.security.cryptography.Kuznechik;
+import org.terifan.raccoon.security.cryptography.Serpent;
+import org.terifan.raccoon.security.cryptography.Twofish;
 import org.testng.annotations.Test;
 
 

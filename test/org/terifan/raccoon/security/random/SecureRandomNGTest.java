@@ -1,7 +1,7 @@
 package org.terifan.raccoon.security.random;
 
 import java.io.ByteArrayOutputStream;
-import org.terifan.security.cryptography.AES;
+import org.terifan.raccoon.security.cryptography.AES;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 

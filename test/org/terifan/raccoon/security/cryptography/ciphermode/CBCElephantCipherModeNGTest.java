@@ -1,10 +1,10 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import org.terifan.security.cryptography.ciphermode.CBCElephantCipherMode;
 import java.util.Random;
-import org.terifan.security.cryptography.AES;
-import org.terifan.security.cryptography.Serpent;
-import org.terifan.security.cryptography.Twofish;
+import org.terifan.raccoon.security.cryptography.AES;
+import org.terifan.raccoon.security.cryptography.Serpent;
+import org.terifan.raccoon.security.cryptography.Twofish;
+import org.terifan.raccoon.security.cryptography.ciphermode.CBCElephantCipherMode;
 import org.testng.annotations.Test;
 
 

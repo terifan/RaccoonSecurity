@@ -6,8 +6,8 @@ import java.security.spec.KeySpec;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.terifan.security.messagedigest.HMAC;
-import org.terifan.security.messagedigest.SHA512;
+import org.terifan.raccoon.security.messagedigest.HMAC;
+import org.terifan.raccoon.security.messagedigest.SHA512;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 

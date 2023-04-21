@@ -1,11 +1,11 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
 import java.nio.ByteBuffer;
 import java.util.HexFormat;
 import java.util.Random;
-import org.terifan.security.cryptography.AES;
-import org.terifan.security.cryptography.BlockCipher;
-import org.terifan.security.cryptography.SecretKey;
+import org.terifan.raccoon.security.cryptography.AES;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import org.terifan.raccoon.security.cryptography.SecretKey;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 

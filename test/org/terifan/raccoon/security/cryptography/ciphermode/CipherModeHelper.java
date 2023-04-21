@@ -1,8 +1,8 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
 import java.util.Random;
-import org.terifan.security.cryptography.BlockCipher;
-import org.terifan.security.cryptography.SecretKey;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import org.terifan.raccoon.security.cryptography.SecretKey;
 import static org.testng.Assert.*;
 
 
