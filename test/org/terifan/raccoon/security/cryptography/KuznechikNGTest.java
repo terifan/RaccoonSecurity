@@ -1,4 +1,4 @@
-package org.terifan.security.cryptography;
+package org.terifan.raccoon.security.cryptography;
 
 import java.util.HexFormat;
 import static org.testng.Assert.*;

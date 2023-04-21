@@ -1,16 +1,15 @@
-package org.terifan.security.cryptography;
+package org.terifan.raccoon.security.cryptography;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 
 
-public class AESNGTest
+public class SerpentNGTest
 {
 	@Test
 	public void testInitialized()
 	{
-		BlockCipher cipher = new AES();
+		BlockCipher cipher = new Serpent();
 		assertFalse(cipher.isInitialized());
 		cipher.engineInit(new SecretKey(new byte[16]));
 		assertTrue(cipher.isInitialized());

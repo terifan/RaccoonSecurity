@@ -1,4 +1,4 @@
-package org.terifan.security.cryptography;
+package org.terifan.raccoon.security.cryptography;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
