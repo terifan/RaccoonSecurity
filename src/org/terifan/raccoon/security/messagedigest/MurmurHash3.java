@@ -1,4 +1,4 @@
-package org.terifan.security.messagedigest;
+package org.terifan.raccoon.security.messagedigest;
 
 
 /**

@@ -1,7 +1,7 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import org.terifan.security.cryptography.BlockCipher;
-import static org.terifan.security.cryptography.ciphermode.ByteArrayUtil.*;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import static org.terifan.raccoon.security.cryptography.ciphermode.ByteArrayUtil.*;
 
 
 /**

@@ -1,12 +1,12 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
 import java.util.Arrays;
 import java.util.Random;
-import org.terifan.security.cryptography.BlockCipher;
-import org.terifan.security.cryptography.SecretKey;
-import org.terifan.security.cryptography.Twofish;
-import static org.terifan.security.cryptography.ciphermode.ByteArrayUtil.copyInt32;
-import org.terifan.security.random.SecureRandom;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import org.terifan.raccoon.security.cryptography.SecretKey;
+import org.terifan.raccoon.security.cryptography.Twofish;
+import static org.terifan.raccoon.security.cryptography.ciphermode.ByteArrayUtil.copyInt32;
+import org.terifan.raccoon.security.random.SecureRandom;
 
 
 public final class CBCElephantCipherMode extends CipherMode

@@ -1,4 +1,4 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

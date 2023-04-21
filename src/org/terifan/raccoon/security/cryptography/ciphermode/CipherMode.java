@@ -1,6 +1,6 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import org.terifan.security.cryptography.BlockCipher;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
 
 
 

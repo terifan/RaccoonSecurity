@@ -1,7 +1,7 @@
-package org.terifan.security.messagedigest;
+package org.terifan.raccoon.security.messagedigest;
 
-import org.terifan.security.cryptography.PBKDF2;
-import org.terifan.security.messagedigest.HMAC;
+import org.terifan.raccoon.security.cryptography.PBKDF2;
+import org.terifan.raccoon.security.messagedigest.HMAC;
 
 /**
  * STRONGER KEY DERIVATION VIA SEQUENTIAL MEMORY-HARD FUNCTIONS

@@ -1,4 +1,4 @@
-package org.terifan.security.random;
+package org.terifan.raccoon.security.random;
 
 import java.util.Arrays;
 import java.util.Spliterators;
@@ -8,10 +8,10 @@ import java.util.function.LongConsumer;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
-import org.terifan.security.cryptography.AES;
-import org.terifan.security.cryptography.BlockCipher;
-import org.terifan.security.cryptography.SecretKey;
-import org.terifan.security.messagedigest.SHA3;
+import org.terifan.raccoon.security.cryptography.AES;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import org.terifan.raccoon.security.cryptography.SecretKey;
+import org.terifan.raccoon.security.messagedigest.SHA3;
 
 
 /**

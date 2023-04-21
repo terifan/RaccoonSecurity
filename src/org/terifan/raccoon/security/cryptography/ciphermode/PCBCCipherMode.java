@@ -1,15 +1,15 @@
-package org.terifan.security.cryptography.ciphermode;
+package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import org.terifan.security.cryptography.BlockCipher;
-import static org.terifan.security.cryptography.ciphermode.ByteArrayUtil.*;
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+import static org.terifan.raccoon.security.cryptography.ciphermode.ByteArrayUtil.*;
 
 
-public final class CBCCipherMode extends CipherMode
+public final class PCBCCipherMode extends CipherMode
 {
 	private final static int BYTES_PER_BLOCK = 16;
 
 
-	public CBCCipherMode()
+	public PCBCCipherMode()
 	{
 	}
 
@@ -19,10 +19,10 @@ public final class CBCCipherMode extends CipherMode
 	{
 		assert (aUnitSize & (BYTES_PER_BLOCK - 1)) == 0;
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
-		assert aLength >= aUnitSize : aLength + " >= " + aUnitSize;
-		assert (aLength % aUnitSize) == 0 : aLength + " % " + aUnitSize;
+		assert aLength >= aUnitSize;
+		assert (aLength % aUnitSize) == 0;
 
-		byte[] iv = new byte[BYTES_PER_BLOCK];
+		byte[] iv = new byte[2 * BYTES_PER_BLOCK]; // IV + plaintext
 		int numUnits = aLength / aUnitSize;
 		int numBlocks = aUnitSize / BYTES_PER_BLOCK;
 
@@ -32,11 +32,15 @@ public final class CBCCipherMode extends CipherMode
 
 			for (int block = 0; block < numBlocks; block++, aOffset += BYTES_PER_BLOCK)
 			{
+				System.arraycopy(aBuffer, aOffset, iv, BYTES_PER_BLOCK, BYTES_PER_BLOCK);
+
 				xor(iv, 0, BYTES_PER_BLOCK, aBuffer, aOffset);
 
 				aCipher.engineEncryptBlock(iv, 0, aBuffer, aOffset);
 
 				System.arraycopy(aBuffer, aOffset, iv, 0, BYTES_PER_BLOCK);
+
+				xor(iv, 0, BYTES_PER_BLOCK, iv, BYTES_PER_BLOCK);
 			}
 		}
 	}
@@ -47,10 +51,10 @@ public final class CBCCipherMode extends CipherMode
 	{
 		assert (aUnitSize & (BYTES_PER_BLOCK - 1)) == 0;
 		assert (aLength & (BYTES_PER_BLOCK - 1)) == 0;
-		assert aLength >= aUnitSize : aLength + " >= " + aUnitSize;
-		assert (aLength % aUnitSize) == 0 : aLength + " % " + aUnitSize;
+		assert aLength >= aUnitSize;
+		assert (aLength % aUnitSize) == 0;
 
-		byte[] iv = new byte[BYTES_PER_BLOCK + BYTES_PER_BLOCK]; // IV + next IV
+		byte[] iv = new byte[2 * BYTES_PER_BLOCK]; // IV + next IV
 		int numUnits = aLength / aUnitSize;
 		int numBlocks = aUnitSize / BYTES_PER_BLOCK;
 
@@ -65,6 +69,8 @@ public final class CBCCipherMode extends CipherMode
 				aCipher.engineDecryptBlock(aBuffer, aOffset, aBuffer, aOffset);
 
 				xor(aBuffer, aOffset, BYTES_PER_BLOCK, iv, ivOffset);
+
+				xor(iv, BYTES_PER_BLOCK - ivOffset, BYTES_PER_BLOCK, aBuffer, aOffset);
 			}
 		}
 	}

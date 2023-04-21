@@ -1,4 +1,4 @@
-package org.terifan.security.random;
+package org.terifan.raccoon.security.random;
 
 
 /**

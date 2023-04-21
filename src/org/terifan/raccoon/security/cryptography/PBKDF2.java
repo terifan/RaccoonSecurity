@@ -1,6 +1,6 @@
-package org.terifan.security.cryptography;
+package org.terifan.raccoon.security.cryptography;
 
-import org.terifan.security.messagedigest.HMAC;
+import org.terifan.raccoon.security.messagedigest.HMAC;
 import java.util.Arrays;
 
 
