@@ -234,7 +234,7 @@ public class MurmurHash3
 	 * @param aSeed seed value
 	 * @return an array with two longs
 	 */
-	public static long[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
+	public static int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
 	{
 		int nblocks = aLength / 16;
 
@@ -330,9 +330,11 @@ public class MurmurHash3
 		h1 += h2;
 		h2 += h1;
 
-		long[] output = new long[2];
-		output[0] = h1;
-		output[1] = h2;
+		int[] output = new int[4];
+		output[0] = (int)(h1 >>> 32);
+		output[1] = (int)(h1);
+		output[2] = (int)(h2 >>> 32);
+		output[3] = (int)(h2);
 
 		return output;
 	}
