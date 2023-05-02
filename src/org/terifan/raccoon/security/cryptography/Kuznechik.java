@@ -462,14 +462,175 @@ public final class Kuznechik implements BlockCipher
 	@Override
 	public void engineEncryptBlock(int[] aIn, int aInOffset, int[] aOut, int aOutOffset)
 	{
-		throw new UnsupportedOperationException("Not supported yet.");
+		int A0, A1, A2, A3, T0, T1, T2, T3;
+
+		int C0 = aIn[aInOffset + 0];
+		int C1 = aIn[aInOffset + 1];
+		int C2 = aIn[aInOffset + 2];
+		int C3 = aIn[aInOffset + 3];
+
+		for (int i = 0; i < 9; i++)
+		{
+			C0 ^= key[i][0];
+			C1 ^= key[i][1];
+			C2 ^= key[i][2];
+			C3 ^= key[i][3];
+
+			C0 = (kuz_pi[C0 & 0xFF] & 0xFF)
+				+ ((kuz_pi[(C0 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi[(C0 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi[(C0 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C1 = (kuz_pi[C1 & 0xFF] & 0xFF)
+				+ ((kuz_pi[(C1 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi[(C1 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi[(C1 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C2 = (kuz_pi[C2 & 0xFF] & 0xFF)
+				+ ((kuz_pi[(C2 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi[(C2 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi[(C2 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C3 = (kuz_pi[C3 & 0xFF] & 0xFF)
+				+ ((kuz_pi[(C3 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi[(C3 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi[(C3 >> 24) & 0xFF] & 0xFF) << 24);
+
+			T0 = (0 + (((C0 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (1 + (((C0 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (2 + (((C0 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (3 + (((C0 >> 0) & 0xFF) << 4)) << 2;
+
+			A0 = gf256res[T0 + 0] ^ gf256res[T1 + 0] ^ gf256res[T2 + 0] ^ gf256res[T3 + 0];
+			A1 = gf256res[T0 + 1] ^ gf256res[T1 + 1] ^ gf256res[T2 + 1] ^ gf256res[T3 + 1];
+			A2 = gf256res[T0 + 2] ^ gf256res[T1 + 2] ^ gf256res[T2 + 2] ^ gf256res[T3 + 2];
+			A3 = gf256res[T0 + 3] ^ gf256res[T1 + 3] ^ gf256res[T2 + 3] ^ gf256res[T3 + 3];
+
+			T0 = (4 + (((C1 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (5 + (((C1 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (6 + (((C1 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (7 + (((C1 >> 0) & 0xFF) << 4)) << 2;
+			A0 = A0 ^ gf256res[T0 + 0] ^ gf256res[T1 + 0] ^ gf256res[T2 + 0] ^ gf256res[T3 + 0];
+			A1 = A1 ^ gf256res[T0 + 1] ^ gf256res[T1 + 1] ^ gf256res[T2 + 1] ^ gf256res[T3 + 1];
+			A2 = A2 ^ gf256res[T0 + 2] ^ gf256res[T1 + 2] ^ gf256res[T2 + 2] ^ gf256res[T3 + 2];
+			A3 = A3 ^ gf256res[T0 + 3] ^ gf256res[T1 + 3] ^ gf256res[T2 + 3] ^ gf256res[T3 + 3];
+
+			T0 = (8 + (((C2 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (9 + (((C2 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (10 + (((C2 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (11 + (((C2 >> 0) & 0xFF) << 4)) << 2;
+			A0 = A0 ^ gf256res[T0 + 0] ^ gf256res[T1 + 0] ^ gf256res[T2 + 0] ^ gf256res[T3 + 0];
+			A1 = A1 ^ gf256res[T0 + 1] ^ gf256res[T1 + 1] ^ gf256res[T2 + 1] ^ gf256res[T3 + 1];
+			A2 = A2 ^ gf256res[T0 + 2] ^ gf256res[T1 + 2] ^ gf256res[T2 + 2] ^ gf256res[T3 + 2];
+			A3 = A3 ^ gf256res[T0 + 3] ^ gf256res[T1 + 3] ^ gf256res[T2 + 3] ^ gf256res[T3 + 3];
+
+			T0 = (12 + (((C3 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (13 + (((C3 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (14 + (((C3 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (15 + (((C3 >> 0) & 0xFF) << 4)) << 2;
+			C0 = A0 ^ gf256res[T0 + 0] ^ gf256res[T1 + 0] ^ gf256res[T2 + 0] ^ gf256res[T3 + 0];
+			C1 = A1 ^ gf256res[T0 + 1] ^ gf256res[T1 + 1] ^ gf256res[T2 + 1] ^ gf256res[T3 + 1];
+			C2 = A2 ^ gf256res[T0 + 2] ^ gf256res[T1 + 2] ^ gf256res[T2 + 2] ^ gf256res[T3 + 2];
+			C3 = A3 ^ gf256res[T0 + 3] ^ gf256res[T1 + 3] ^ gf256res[T2 + 3] ^ gf256res[T3 + 3];
+		}
+
+		C0 ^= key[9][0];
+		C1 ^= key[9][1];
+		C2 ^= key[9][2];
+		C3 ^= key[9][3];
+
+		aOut[aOutOffset + 0] = C0;
+		aOut[aOutOffset + 1] = C1;
+		aOut[aOutOffset + 2] = C2;
+		aOut[aOutOffset + 3] = C3;
 	}
 
 
 	@Override
 	public void engineDecryptBlock(int[] aIn, int aInOffset, int[] aOut, int aOutOffset)
 	{
-		throw new UnsupportedOperationException("Not supported yet.");
+		int A0, A1, A2, A3, T0, T1, T2, T3;
+
+		int C0 = aIn[aInOffset + 0];
+		int C1 = aIn[aInOffset + 1];
+		int C2 = aIn[aInOffset + 2];
+		int C3 = aIn[aInOffset + 3];
+
+		C0 ^= key[9][0];
+		C1 ^= key[9][1];
+		C2 ^= key[9][2];
+		C3 ^= key[9][3];
+
+		for (int i = 8; i >= 0; i--)
+		{
+
+			T0 = (0 + (((C0 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (1 + (((C0 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (2 + (((C0 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (3 + (((C0 >> 0) & 0xFF) << 4)) << 2;
+
+			A0 = gf256resInv[T0 + 0] ^ gf256resInv[T1 + 0] ^ gf256resInv[T2 + 0] ^ gf256resInv[T3 + 0];
+			A1 = gf256resInv[T0 + 1] ^ gf256resInv[T1 + 1] ^ gf256resInv[T2 + 1] ^ gf256resInv[T3 + 1];
+			A2 = gf256resInv[T0 + 2] ^ gf256resInv[T1 + 2] ^ gf256resInv[T2 + 2] ^ gf256resInv[T3 + 2];
+			A3 = gf256resInv[T0 + 3] ^ gf256resInv[T1 + 3] ^ gf256resInv[T2 + 3] ^ gf256resInv[T3 + 3];
+
+			T0 = (4 + (((C1 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (5 + (((C1 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (6 + (((C1 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (7 + (((C1 >> 0) & 0xFF) << 4)) << 2;
+			A0 = A0 ^ gf256resInv[T0 + 0] ^ gf256resInv[T1 + 0] ^ gf256resInv[T2 + 0] ^ gf256resInv[T3 + 0];
+			A1 = A1 ^ gf256resInv[T0 + 1] ^ gf256resInv[T1 + 1] ^ gf256resInv[T2 + 1] ^ gf256resInv[T3 + 1];
+			A2 = A2 ^ gf256resInv[T0 + 2] ^ gf256resInv[T1 + 2] ^ gf256resInv[T2 + 2] ^ gf256resInv[T3 + 2];
+			A3 = A3 ^ gf256resInv[T0 + 3] ^ gf256resInv[T1 + 3] ^ gf256resInv[T2 + 3] ^ gf256resInv[T3 + 3];
+
+			T0 = (8 + (((C2 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (9 + (((C2 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (10 + (((C2 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (11 + (((C2 >> 0) & 0xFF) << 4)) << 2;
+			A0 = A0 ^ gf256resInv[T0 + 0] ^ gf256resInv[T1 + 0] ^ gf256resInv[T2 + 0] ^ gf256resInv[T3 + 0];
+			A1 = A1 ^ gf256resInv[T0 + 1] ^ gf256resInv[T1 + 1] ^ gf256resInv[T2 + 1] ^ gf256resInv[T3 + 1];
+			A2 = A2 ^ gf256resInv[T0 + 2] ^ gf256resInv[T1 + 2] ^ gf256resInv[T2 + 2] ^ gf256resInv[T3 + 2];
+			A3 = A3 ^ gf256resInv[T0 + 3] ^ gf256resInv[T1 + 3] ^ gf256resInv[T2 + 3] ^ gf256resInv[T3 + 3];
+
+			T0 = (12 + (((C3 >> 24) & 0xFF) << 4)) << 2;
+			T1 = (13 + (((C3 >> 16) & 0xFF) << 4)) << 2;
+			T2 = (14 + (((C3 >> 8) & 0xFF) << 4)) << 2;
+			T3 = (15 + (((C3 >> 0) & 0xFF) << 4)) << 2;
+			C0 = A0 ^ gf256resInv[T0 + 0] ^ gf256resInv[T1 + 0] ^ gf256resInv[T2 + 0] ^ gf256resInv[T3 + 0];
+			C1 = A1 ^ gf256resInv[T0 + 1] ^ gf256resInv[T1 + 1] ^ gf256resInv[T2 + 1] ^ gf256resInv[T3 + 1];
+			C2 = A2 ^ gf256resInv[T0 + 2] ^ gf256resInv[T1 + 2] ^ gf256resInv[T2 + 2] ^ gf256resInv[T3 + 2];
+			C3 = A3 ^ gf256resInv[T0 + 3] ^ gf256resInv[T1 + 3] ^ gf256resInv[T2 + 3] ^ gf256resInv[T3 + 3];
+
+			C0 = (kuz_pi_inv[C0 & 0xFF] & 0xFF)
+				+ ((kuz_pi_inv[(C0 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi_inv[(C0 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi_inv[(C0 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C1 = (kuz_pi_inv[C1 & 0xFF] & 0xFF)
+				+ ((kuz_pi_inv[(C1 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi_inv[(C1 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi_inv[(C1 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C2 = (kuz_pi_inv[C2 & 0xFF] & 0xFF)
+				+ ((kuz_pi_inv[(C2 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi_inv[(C2 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi_inv[(C2 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C3 = (kuz_pi_inv[C3 & 0xFF] & 0xFF)
+				+ ((kuz_pi_inv[(C3 >> 8) & 0xFF] & 0xFF) << 8)
+				+ ((kuz_pi_inv[(C3 >> 16) & 0xFF] & 0xFF) << 16)
+				+ ((kuz_pi_inv[(C3 >> 24) & 0xFF] & 0xFF) << 24);
+
+			C0 ^= key[i][0];
+			C1 ^= key[i][1];
+			C2 ^= key[i][2];
+			C3 ^= key[i][3];
+		}
+
+		aOut[aOutOffset + 0] = C0;
+		aOut[aOutOffset + 1] = C1;
+		aOut[aOutOffset + 2] = C2;
+		aOut[aOutOffset + 3] = C3;
 	}
 
 

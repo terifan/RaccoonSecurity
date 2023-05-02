@@ -3,7 +3,6 @@ package org.terifan.raccoon.security.cryptography.ciphermode;
 import org.terifan.raccoon.security.cryptography.BlockCipher;
 
 
-
 public abstract class CipherMode
 {
 	public CipherMode()

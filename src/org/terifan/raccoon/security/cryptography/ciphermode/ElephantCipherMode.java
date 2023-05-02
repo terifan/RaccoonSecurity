@@ -6,10 +6,9 @@ import org.terifan.raccoon.security.cryptography.BlockCipher;
 import org.terifan.raccoon.security.cryptography.SecretKey;
 import org.terifan.raccoon.security.cryptography.Twofish;
 import static org.terifan.raccoon.security.cryptography.ciphermode.ByteArrayUtil.copyInt32;
-import org.terifan.raccoon.security.random.SecureRandom;
 
 
-public final class CBCElephantCipherMode extends CipherMode
+public final class ElephantCipherMode extends CipherMode
 {
 	private final static int BYTES_PER_CIPHER_BLOCK = 16;
 
@@ -21,31 +20,6 @@ public final class CBCElephantCipherMode extends CipherMode
 	{
 		0, 10, 0, 25
 	};
-
-	private final transient int[] mTweak;
-
-
-	public CBCElephantCipherMode(long aTweakSeed)
-	{
-		mTweak = new int[8];
-
-		SecureRandom prng = new SecureRandom(aTweakSeed);
-		for (int i = 0; i < 64; i++)
-		{
-			mTweak[i & 7] ^= prng.nextInt();
-		}
-	}
-
-
-	public CBCElephantCipherMode(int[] aTweak)
-	{
-		if (aTweak.length != 8)
-		{
-			throw new IllegalArgumentException("The tweak IV must be " + 8 + " ints.");
-		}
-
-		mTweak = aTweak;
-	}
 
 
 	@Override
@@ -81,7 +55,7 @@ public final class CBCElephantCipherMode extends CipherMode
 			}
 
 			// elephant diffuser
-			prepareTweak(mTweak, aStartDataUnitNo + unitIndex, tweak, aTweakCipher);
+			prepareTweak(aBlockIV, aStartDataUnitNo + unitIndex, tweak, aTweakCipher);
 
 			for (int i = 0; i < blocksPerUnit; i++)
 			{
@@ -127,7 +101,7 @@ public final class CBCElephantCipherMode extends CipherMode
 			copyInt32(aBuffer, offset, words, 0, wordsPerUnit);
 
 			// elephant diffuser
-			prepareTweak(mTweak, aStartDataUnitNo + unitIndex, tweak, aTweakCipher);
+			prepareTweak(aBlockIV, aStartDataUnitNo + unitIndex, tweak, aTweakCipher);
 
 			for (int i = 0; i < 3 * wordsPerUnit; i++)
 			{
@@ -166,19 +140,19 @@ public final class CBCElephantCipherMode extends CipherMode
 	}
 
 
-	private void prepareTweak(int[] aSourceTweak, long aDataUnitNo, int[] aTweak, BlockCipher aTweakCipher)
+	private void prepareTweak(int[] aBlockIV, long aDataUnitNo, int[] aTweak, BlockCipher aTweakCipher)
 	{
-		aTweak[0] = aSourceTweak[0] + (int)(aDataUnitNo >>> 32);
-		aTweak[1] = aSourceTweak[1] + (int)(aDataUnitNo);
-		aTweak[2] = aSourceTweak[2];
-		aTweak[3] = aSourceTweak[3];
+		aDataUnitNo = -aDataUnitNo;
 
-		aTweak[4] = aSourceTweak[4] + (int)(aDataUnitNo >>> 32);
-		aTweak[5] = aSourceTweak[5] + (int)(aDataUnitNo);
-		aTweak[6] = aSourceTweak[6];
-		aTweak[7] = aSourceTweak[7] + 1;
+		aTweak[0] = aBlockIV[0] ^ 0xcafebabe;
+		aTweak[1] = aBlockIV[1];
+		aTweak[2] = aBlockIV[2] + (int)(aDataUnitNo >>> 32);
+		aTweak[3] = aBlockIV[3] + (int)(aDataUnitNo);
 
-//		ByteArrayUtil.hexDump(ByteArrayUtil.toBytes(aTweak));
+		aTweak[4] = aBlockIV[0] ^ 0xdeadface;
+		aTweak[5] = aBlockIV[1];
+		aTweak[6] = aBlockIV[2] + (int)(aDataUnitNo >>> 32);
+		aTweak[7] = aBlockIV[3] + (int)(aDataUnitNo);
 
 		aTweakCipher.engineEncryptBlock(aTweak, 0, aTweak, 0);
 		aTweakCipher.engineEncryptBlock(aTweak, 4, aTweak, 4);
@@ -197,9 +171,7 @@ public final class CBCElephantCipherMode extends CipherMode
 //		{
 //			int L = 32;
 //
-//			Random rnd = new Random(1);
-////			int[] tweakIV = rnd.ints(8).toArray();
-//			int[] tweakIV = new int[8];//rnd.ints(8).toArray();
+//			Random rnd = new Random();
 //			byte[] cipherKey = new byte[32];
 //			byte[] tweakKey = new byte[32];
 //			rnd.nextBytes(cipherKey);
@@ -207,40 +179,93 @@ public final class CBCElephantCipherMode extends CipherMode
 //
 //			BlockCipher cipher = new Twofish(new SecretKey(cipherKey));
 //			BlockCipher tweakCipher = new Twofish(new SecretKey(tweakKey));
-////			CipherMode instance = new CBCElephantCipherMode(tweakIV);
-//			CipherMode instance = new CBCElephantCipherMode(98797);
+//			CipherMode instance = new ElephantCipherMode();
+////			CipherMode instance = new CBCCipherMode();
 //
-//			int[] blockIV = new Random(1).ints(4).toArray();
-//			long unitIndex = 0;//rnd.nextLong();
+//			int[] blockIV = rnd.ints(4).toArray();
+//			long unitIndex = rnd.nextLong();
 //
-//			for (int test = 0; test < 3; test++)
-//			{
-//				byte[] clearText = new byte[3 * L];
+//			byte[] clearText = new byte[3 * L];
 //
-//				// update a single bit in each unit, entire unit is "diffused" by the single bit
-//				clearText[0 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
-//				clearText[1 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
-//				clearText[2 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
+//			// update a single bit in each unit, entire unit is "diffused" by the single bit
+//			clearText[0 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
+//			clearText[1 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
+//			clearText[2 * L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
 //
-//				byte[] encoded = clearText.clone();
-//				instance.encrypt(encoded, 0, 3 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
+//			byte[] encoded = clearText.clone();
+//			instance.encrypt(encoded, 0, 3 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
 //
-//				byte[] decoded = encoded.clone();
-//				instance.decrypt(decoded, 0, 1 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
-//				instance.decrypt(decoded, L, 2 * L, cipher, unitIndex + 1, L, blockIV, tweakCipher);
+//			byte[] decoded = encoded.clone();
+//			instance.decrypt(decoded, 0, 1 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
+//			instance.decrypt(decoded, L, 2 * L, cipher, unitIndex + 1, L, blockIV, tweakCipher);
 //
-////				System.out.println("CLEARTEXT");
-////				ByteArrayUtil.hexDump(clearText);
-//				System.out.println("ENCODED");
-//				ByteArrayUtil.hexDump(encoded);
-////				System.out.println("DECODED");
-////				ByteArrayUtil.hexDump(decoded);
-//				System.out.println(Arrays.equals(clearText, decoded));
-//			}
+//			System.out.println("CLEARTEXT");
+//			ByteArrayUtil.hexDump(clearText);
+//			System.out.println("ENCODED");
+//			ByteArrayUtil.hexDump(encoded);
+//			System.out.println("DECODED");
+//			ByteArrayUtil.hexDump(decoded);
+//			System.out.println(Arrays.equals(clearText, decoded));
 //		}
 //		catch (Exception e)
 //		{
 //			e.printStackTrace(System.out);
 //		}
 //	}
+
+
+	public static void main(String... args)
+	{
+		try
+		{
+			int L = 128;
+
+			Random rnd = new Random();
+			byte[] cipherKey = new byte[32];
+			byte[] tweakKey = new byte[32];
+			rnd.nextBytes(cipherKey);
+			rnd.nextBytes(tweakKey);
+
+			BlockCipher cipher = new Twofish(new SecretKey(cipherKey));
+			BlockCipher tweakCipher = new Twofish(new SecretKey(tweakKey));
+
+			// the entire unit is destroyed by a single bit change anywhere
+//			CipherMode instance = new ElephantCipherMode();
+
+			// one cipher block + one byte in next block is destroyed
+//			CipherMode instance = new CBCCipherMode();
+
+			// the altered cipher block and all following blocks are destroyed
+			CipherMode instance = new PCBCCipherMode();
+
+			// one cipher block is destroyed
+//			CipherMode instance = new XTSCipherMode();
+
+			int[] blockIV = rnd.ints(4).toArray();
+			long unitIndex = rnd.nextLong();
+
+			byte[] clearText = new byte[3 * L];
+
+			byte[] encoded = clearText.clone();
+			instance.encrypt(encoded, 0, 3 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
+
+			// update a single bit in each unit, entire unit is "diffused" by the single bit
+			encoded[L + rnd.nextInt(L)] = (byte)(1 << rnd.nextInt(8));
+
+			byte[] decoded = encoded.clone();
+			instance.decrypt(decoded, 0, 3 * L, cipher, unitIndex + 0, L, blockIV, tweakCipher);
+
+			System.out.println("CLEARTEXT");
+			ByteArrayUtil.hexDump(clearText);
+			System.out.println("ENCODED");
+			ByteArrayUtil.hexDump(encoded);
+			System.out.println("DECODED");
+			ByteArrayUtil.hexDump(decoded);
+			System.out.println(Arrays.equals(clearText, decoded));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(System.out);
+		}
+	}
 }
