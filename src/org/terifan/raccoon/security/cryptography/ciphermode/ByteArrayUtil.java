@@ -1,110 +1,87 @@
 package org.terifan.raccoon.security.cryptography.ciphermode;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 
 final class ByteArrayUtil
 {
-	static void xor(byte[] aBuffer, int aOffset, int aLength, byte[] aMask, int aMaskOffset)
+	static void xor(byte[] aDstBuffer, int aDstOffset, int aLength, byte[] aXorBuffer, int aXorOffset)
 	{
 		for (int i = 0; i < aLength; i++)
 		{
-			aBuffer[aOffset + i] ^= aMask[aMaskOffset + i];
+			aDstBuffer[aDstOffset++] ^= aXorBuffer[aXorOffset++];
 		}
 	}
 
 
-	static int getInt32(byte[] aBuffer, int aPosition)
+	static void hexDump(byte[] aBuffer)
 	{
-		return ((aBuffer[aPosition] & 0xFF) << 24)
-			+ ((aBuffer[aPosition + 1] & 0xFF) << 16)
-			+ ((aBuffer[aPosition + 2] & 0xFF) << 8)
-			+ ((aBuffer[aPosition + 3] & 0xFF));
+		hexDump(aBuffer, null);
 	}
 
 
-	static void putInt32(byte[] aBuffer, int aPosition, int aValue)
+	static void hexDump(byte[] aBuffer, byte[] aCompareWith)
 	{
-		aBuffer[aPosition++] = (byte)(aValue >>> 24);
-		aBuffer[aPosition++] = (byte)(aValue >> 16);
-		aBuffer[aPosition++] = (byte)(aValue >> 8);
-		aBuffer[aPosition] = (byte)(aValue);
-	}
+		int MR = aBuffer.length;
+		int LW = 32;
 
+		StringBuilder binText = new StringBuilder("");
+		StringBuilder hexText = new StringBuilder("");
 
-	static void copyInt32(byte[] aIn, int aInOffset, int[] aOut, int aOutOffset, int aNumInts)
-	{
-		for (int i = 0; i < aNumInts; i++, aInOffset+=4)
+		for (int row = 0, offset = 0; offset < aBuffer.length && row < MR; row++)
 		{
-			aOut[aOutOffset++] = getInt32(aIn, aInOffset);
-		}
-	}
+			hexText.append("\033[1;30m" + String.format("%04d: ", row * LW) + "\033[0m");
 
+			int padding = 3 * LW + LW / 8;
+			String mode = "";
 
-	static void copyInt32(int[] aIn, int aInOffset, byte[] aOut, int aOutOffset, int aNumInts)
-	{
-		for (int i = 0; i < aNumInts; i++, aOutOffset+=4, aInOffset++)
-		{
-			putInt32(aOut, aOutOffset, aIn[aInOffset]);
-		}
-	}
-
-
-	static void hexDump(byte[] aData)
-	{
-		int width = 32;
-		int length = aData.length;
-		InputStream in = new ByteArrayInputStream(aData);
-
-		try
-		{
-			StringBuilder binText = new StringBuilder("");
-			StringBuilder hexText = new StringBuilder("");
-
-			for (int row = 0; row == 0 || length > 0; row++)
+			for (int i = 0; offset < aBuffer.length && i < LW; i++, offset++)
 			{
-				hexText.append(String.format("%04d: ", row * width));
+				int c = 0xff & aBuffer[offset];
 
-				int padding = 3 * width + width / 8;
-
-				for (int i = 0; i < width && length > 0; i++)
+				String nextMode;
+				if (aCompareWith != null && c != (0xff & aCompareWith[offset]))
 				{
-					int c = in.read();
-
-					if (c == -1)
-					{
-						length = 0;
-						break;
-					}
-
-					hexText.append(String.format("%02x ", c));
-					binText.append(Character.isISOControl(c) ? '.' : (char)c);
-					padding -= 3;
-					length--;
-
-					if ((i & 7) == 7)
-					{
-						hexText.append(" ");
-						padding--;
-					}
+					nextMode = "\033[1;31m";
+				}
+				else if (c >= '0' && c <= '9')
+				{
+					nextMode = "\033[0;35m";
+				}
+				else if (!(c < ' ' || c >= 128))
+				{
+					nextMode = "\033[0;36m";
+				}
+				else
+				{
+					nextMode = "\033[0m";
+				}
+				if (!nextMode.equals(mode))
+				{
+					mode = nextMode;
+					hexText.append(mode);
+					binText.append(mode);
 				}
 
-				for (int i = 0; i < padding; i++)
+				hexText.append(String.format("%02x ", c));
+				binText.append(Character.isISOControl(c) ? '.' : (char)c);
+
+				padding -= 3;
+
+				if ((i & 7) == 7)
 				{
 					hexText.append(" ");
+					padding--;
 				}
-
-				System.out.println(hexText.append(binText).toString());
-
-				binText.setLength(0);
-				hexText.setLength(0);
 			}
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
+
+			for (int i = 0; i < padding; i++)
+			{
+				hexText.append(" ");
+			}
+
+			System.out.println(hexText + "\033[0m" + binText + "\033[0m");
+
+			binText.setLength(0);
+			hexText.setLength(0);
 		}
 	}
 }
