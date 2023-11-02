@@ -232,7 +232,7 @@ public class MurmurHash3
 	 * @param aOffset offset in buffer
 	 * @param aLength number of bytes to process
 	 * @param aSeed seed value
-	 * @return an array with two longs
+	 * @return an array with four ints
 	 */
 	public static int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
 	{
