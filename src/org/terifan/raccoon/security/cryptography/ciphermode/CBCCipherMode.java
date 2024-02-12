@@ -1,7 +1,6 @@
 package org.terifan.raccoon.security.cryptography.ciphermode;
 
 import org.terifan.raccoon.security.cryptography.BlockCipher;
-import static org.terifan.raccoon.security.cryptography.ciphermode.ByteArrayUtil.*;
 
 
 public final class CBCCipherMode extends CipherMode

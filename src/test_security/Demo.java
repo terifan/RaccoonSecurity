@@ -1,10 +1,12 @@
-package org.terifan.raccoon.security.cryptography.ciphermode;
+package test_security;
 
 import java.util.Arrays;
 import org.terifan.raccoon.security.cryptography.AES;
 import org.terifan.raccoon.security.cryptography.BlockCipher;
 import org.terifan.raccoon.security.cryptography.SecretKey;
 import org.terifan.raccoon.security.cryptography.Twofish;
+import org.terifan.raccoon.security.cryptography.ciphermode.CipherMode;
+import org.terifan.raccoon.security.cryptography.ciphermode.XTSCipherMode;
 import org.terifan.raccoon.security.random.SecureRandom;
 
 
@@ -54,11 +56,11 @@ public class Demo
 			instance.decrypt(decoded, 0, 3 * unitSize, cipher, unitIndex, unitSize, blockIV, tweakCipher);
 
 			System.out.println("CLEARTEXT");
-			ByteArrayUtil.hexDump(clearText);
+			HexDump.hexDump(clearText);
 			System.out.println("ENCODED");
-			ByteArrayUtil.hexDump(encoded);
+			HexDump.hexDump(encoded);
 			System.out.println("DECODED");
-			ByteArrayUtil.hexDump(decoded, clearText);
+			HexDump.hexDump(decoded, clearText);
 			System.out.println();
 			System.out.println(Arrays.equals(clearText, decoded));
 		}

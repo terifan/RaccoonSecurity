@@ -77,4 +77,13 @@ public abstract class CipherMode
 		aBuffer[aPosition++] = (byte)(aValue >> 8);
 		aBuffer[aPosition] = (byte)(aValue);
 	}
+
+
+	static void xor(byte[] aDstBuffer, int aDstOffset, int aLength, byte[] aXorBuffer, int aXorOffset)
+	{
+		for (int i = 0; i < aLength; i++)
+		{
+			aDstBuffer[aDstOffset++] ^= aXorBuffer[aXorOffset++];
+		}
+	}
 }
