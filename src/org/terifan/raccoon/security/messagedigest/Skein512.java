@@ -362,10 +362,19 @@ public final class Skein512 extends MessageDigest implements Cloneable
 	}
 
 
-	public int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
+	public static int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
 	{
-		update(aData, aOffset, aLength);
-		byte[] tmp = engineDigest();
+		Skein512 instance = new Skein512();
+		instance.update((byte)(aSeed >>> 56));
+		instance.update((byte)(aSeed >> 48));
+		instance.update((byte)(aSeed >> 40));
+		instance.update((byte)(aSeed >> 32));
+		instance.update((byte)(aSeed >> 24));
+		instance.update((byte)(aSeed >> 16));
+		instance.update((byte)(aSeed >> 8));
+		instance.update((byte)(aSeed));
+		instance.update(aData, aOffset, aLength);
+		byte[] tmp = instance.engineDigest();
 		int[] result = new int[4];
 		for (int i = 0, j = 0; i < 16; i+=4)
 		{

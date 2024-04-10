@@ -16,15 +16,12 @@ public final class SHA512 extends MessageDigest implements Cloneable
 {
 	private final static int DIGEST_LENGTH = 64;
 
+	private long[] w = new long[80];
 	private byte[] xBuf;
 	private int xBufOff;
-
 	private long byteCount1;
 	private long byteCount2;
-
 	private long h1, h2, h3, h4, h5, h6, h7, h8;
-
-	private long[] w = new long[80];
 	private int wOff;
 
 
@@ -478,14 +475,45 @@ public final class SHA512 extends MessageDigest implements Cloneable
 	@Override
 	public SHA512 clone()
 	{
-		return new SHA512(this);
+		try
+		{
+			SHA512 copy = (SHA512)super.clone();
+			copy.w = w.clone();
+			copy.xBuf = xBuf.clone();
+			copy.xBufOff = xBufOff;
+			copy.byteCount1 = byteCount1;
+			copy.byteCount2 = byteCount2;
+			copy.h1 = h1;
+			copy.h2 = h2;
+			copy.h3 = h3;
+			copy.h4 = h4;
+			copy.h5 = h5;
+			copy.h6 = h6;
+			copy.h7 = h7;
+			copy.h8 = h8;
+			copy.wOff = wOff;
+			return copy;
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new IllegalStateException(e);
+		}
 	}
 
 
-	public int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
+	public static int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
 	{
-		update(aData, aOffset, aLength);
-		byte[] tmp = engineDigest();
+		SHA512 instance = new SHA512();
+		instance.update((byte)(aSeed >>> 56));
+		instance.update((byte)(aSeed >> 48));
+		instance.update((byte)(aSeed >> 40));
+		instance.update((byte)(aSeed >> 32));
+		instance.update((byte)(aSeed >> 24));
+		instance.update((byte)(aSeed >> 16));
+		instance.update((byte)(aSeed >> 8));
+		instance.update((byte)(aSeed));
+		instance.update(aData, aOffset, aLength);
+		byte[] tmp = instance.engineDigest();
 		int[] result = new int[4];
 		for (int i = 0, j = 0; i < 16; i+=4)
 		{

@@ -1,7 +1,8 @@
-package org.terifan.raccoon.security.cryptography;
+package org.terifan.raccoon.security.messagedigest;
 
 import org.terifan.raccoon.security.messagedigest.HMAC;
 import java.util.Arrays;
+import org.terifan.raccoon.security.cryptography.SecretKey;
 
 
 /**

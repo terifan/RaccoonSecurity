@@ -1,12 +1,11 @@
 package org.terifan.raccoon.security.messagedigest;
 
-import org.terifan.raccoon.security.cryptography.PBKDF2;
-import org.terifan.raccoon.security.messagedigest.HMAC;
 
 /**
  * STRONGER KEY DERIVATION VIA SEQUENTIAL MEMORY-HARD FUNCTIONS
+ * <p>
  * An implementation of the <a href="http://www.tarsnap.com/scrypt/scrypt.pdf">scrypt</a> key derivation function.
- *
+ * <p>
  * https://github.com/wg/scrypt/tree/master/src/main/java/com/lambdaworks/crypto
  */
 public final class SCrypt
@@ -15,19 +14,19 @@ public final class SCrypt
 	{
 		if (aCost < 2 || (aCost & (aCost - 1)) != 0)
 		{
-			throw new IllegalArgumentException("aCost must be a power of 2 greater than 1");
+			throw new IllegalArgumentException("aCost must be a power of 2 greater than 1: " + aCost);
 		}
 		if (aCost > Integer.MAX_VALUE / 128 / aRounds)
 		{
-			throw new IllegalArgumentException("Parameter aCost is too large");
+			throw new IllegalArgumentException("Parameter aCost is too large: " + aCost);
 		}
 		if (aRounds > Integer.MAX_VALUE / 128 / aParallelization)
 		{
-			throw new IllegalArgumentException("Parameter aRounds is too large");
+			throw new IllegalArgumentException("Parameter aRounds is too large: " + aRounds);
 		}
 		if (aIterationCount < 1)
 		{
-			throw new IllegalArgumentException("aIterationCount must be one or more");
+			throw new IllegalArgumentException("aIterationCount must be one or more: " + aIterationCount);
 		}
 
 		byte[] xy = new byte[256 * aRounds];

@@ -529,10 +529,41 @@ public final class SHA3 extends MessageDigest implements Cloneable
 	}
 
 
-	public int[] hash128(byte[] aData, int aOffset, int aLength, long aSeed)
+	public static int[] hash128_256(byte[] aData, int aOffset, int aLength, long aSeed)
 	{
-		update(aData, aOffset, aLength);
-		byte[] tmp = engineDigest();
+		SHA3 instance = new SHA3(256);
+		instance.update((byte)(aSeed >>> 56));
+		instance.update((byte)(aSeed >> 48));
+		instance.update((byte)(aSeed >> 40));
+		instance.update((byte)(aSeed >> 32));
+		instance.update((byte)(aSeed >> 24));
+		instance.update((byte)(aSeed >> 16));
+		instance.update((byte)(aSeed >> 8));
+		instance.update((byte)(aSeed));
+		instance.update(aData, aOffset, aLength);
+		byte[] tmp = instance.engineDigest();
+		int[] result = new int[4];
+		for (int i = 0, j = 0; i < 16; i+=4)
+		{
+			result[j++] = ((tmp[i] & 255) << 24) + ((tmp[i + 1] & 255) << 16) + ((tmp[i + 2] & 255) << 8) + (tmp[i + 3] & 255);
+		}
+		return result;
+	}
+
+
+	public static int[] hash128_512(byte[] aData, int aOffset, int aLength, long aSeed)
+	{
+		SHA3 instance = new SHA3(512);
+		instance.update((byte)(aSeed >>> 56));
+		instance.update((byte)(aSeed >> 48));
+		instance.update((byte)(aSeed >> 40));
+		instance.update((byte)(aSeed >> 32));
+		instance.update((byte)(aSeed >> 24));
+		instance.update((byte)(aSeed >> 16));
+		instance.update((byte)(aSeed >> 8));
+		instance.update((byte)(aSeed));
+		instance.update(aData, aOffset, aLength);
+		byte[] tmp = instance.engineDigest();
 		int[] result = new int[4];
 		for (int i = 0, j = 0; i < 16; i+=4)
 		{

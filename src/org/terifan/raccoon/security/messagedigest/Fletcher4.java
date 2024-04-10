@@ -26,25 +26,4 @@ public final class Fletcher4
 			a, b, c, d
 		};
 	}
-
-
-//	public static void main(String... args)
-//	{
-//		try
-//		{
-//			for (int i = 0; i < 64; i++)
-//			{
-//				long aSeed = 1L << i;
-//				int a = (int)(aSeed >>> 32);
-//				int b = (int)(aSeed >>> 24);
-//				int c = (int)(aSeed >>> 8);
-//				int d = (int)(aSeed);
-//				System.out.println(a + "\t" + b + "\t" + c + "\t" + d);
-//			}
-//		}
-//		catch (Throwable e)
-//		{
-//			e.printStackTrace(System.out);
-//		}
-//	}
 }

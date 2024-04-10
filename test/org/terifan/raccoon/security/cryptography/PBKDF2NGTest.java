@@ -1,5 +1,6 @@
 package org.terifan.raccoon.security.cryptography;
 
+import org.terifan.raccoon.security.messagedigest.PBKDF2;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;

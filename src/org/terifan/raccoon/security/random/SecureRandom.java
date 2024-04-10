@@ -128,7 +128,7 @@ public final class SecureRandom
 
 
 			@Override
-			public boolean tryAdvance(Consumer aConsumer)
+			public boolean tryAdvance(Consumer<Byte> aConsumer)
 			{
 				if (remaining > 0)
 				{
