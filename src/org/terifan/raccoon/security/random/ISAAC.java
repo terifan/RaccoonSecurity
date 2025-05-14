@@ -45,9 +45,7 @@ public final class ISAAC
 			for (int i = 0; i < 256; i++)
 			{
 				s = (s * 0x5DEECE66DL + 0xBL) & 281474976710655L;
-
 				seed[i] ^= s >>> j;
-
 			}
 		}
 
