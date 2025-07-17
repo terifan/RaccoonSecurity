@@ -1,0 +1,62 @@
+package org.terifan.raccoon.security.cryptography.ciphermode;
+
+import org.terifan.raccoon.security.cryptography.BlockCipher;
+
+
+/**
+ * AES-CTR (Counter) mode – compatible with NIST SP-800-38A. No padding is applied; callers may pass arbitrary-length data.
+ */
+public final class CTRCipherMode extends CipherMode
+{
+	private static final int BLK = 16;              // 128-bit blocks
+
+
+	@Override
+	public void encrypt(byte[] b, int o, int n, BlockCipher c, long du, int us, int[] iv, BlockCipher tw)
+	{
+		update(b, o, n, c, du, us, iv, tw);
+	}
+
+
+	@Override
+	public void decrypt(byte[] b, int o, int n, BlockCipher c, long du, int us, int[] iv, BlockCipher tw)
+	{
+		update(b, o, n, c, du, us, iv, tw);
+	}
+
+
+	private static void update(byte[] buf, int off, int len, BlockCipher cipher, long dataUnit, int unitSz, int[] blockIV, BlockCipher tweak)
+	{
+		byte[] counter = new byte[BLK];		// clear-text counter
+		byte[] ks = new byte[BLK];			// encrypted keystream
+
+		int units = len / unitSz;
+		int blocks = unitSz / BLK;
+
+		for (int u = 0; u < units; u++)
+		{
+			// IV ⊕ data-unit #  →  counter[0..15] (SP-800-38A §D.1)
+			prepareIV(blockIV, dataUnit++, counter, tweak);
+
+			for (int b = 0; b < blocks; b++, off += BLK)
+			{
+				cipher.engineEncryptBlock(counter, 0, ks, 0);	// E_k(counter)
+
+				xor(buf, off, BLK, ks, 0);						// C/P ⊕ KS
+
+				increment(counter);								// clear counter++ (big-endian)
+			}
+		}
+	}
+
+
+	/**
+	 * Increment 128-bit big-endian counter in-place.
+	 */
+	private static void increment(byte[] ctr)
+	{
+		for (int i = BLK; --i >= 0 && ++ctr[i] == 0;)
+		{
+		}
+	}
+}
