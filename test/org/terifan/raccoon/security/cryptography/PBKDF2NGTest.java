@@ -26,7 +26,7 @@ public class PBKDF2NGTest
 
 		byte[] java = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES").getEncoded();
 
-		byte[] soft = PBKDF2.generateKey(new HMAC(new SHA512(), password.getBytes()), salt, 65536, 32).bytes();
+		byte[] soft = PBKDF2.generateKey(new HMAC(new SHA512(), password.getBytes(), 128), salt, 65536, 32).bytes();
 
 		assertEquals(java, soft);
 	}

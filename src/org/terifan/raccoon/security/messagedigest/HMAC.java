@@ -7,46 +7,49 @@ import java.util.Arrays;
 public final class HMAC extends MessageDigest implements Cloneable
 {
 	private transient MessageDigest mMessageDigest;
-	private transient byte [] mInputPad;
-	private transient byte [] mOutputPad;
+	private transient byte[] mInputPad;
+	private transient byte[] mOutputPad;
 
 
 	private HMAC(MessageDigest aMessageDigest)
 	{
-		super("HMAC-"+aMessageDigest.getAlgorithm());
+		super("HMAC-" + aMessageDigest.getAlgorithm());
 
 		mMessageDigest = aMessageDigest;
 	}
 
 
-	public HMAC(MessageDigest aMessageDigest, byte [] aPassword)
+	public HMAC(MessageDigest aMessageDigest, byte[] aPassword)
 	{
 		this(aMessageDigest);
 
-		init(aPassword);
+		init(aPassword, 64);
 	}
 
 
-	private void init(byte [] aPassword)
+	/**
+	 * Generally, do not use this constructor unless you know what you are doing.
+	 *
+	 * @param aBlockLength Default 64, some implementations use a block length of 128 rather than 64.
+	 */
+	public HMAC(MessageDigest aMessageDigest, byte[] aPassword, int aBlockLength)
+	{
+		this(aMessageDigest);
+
+		init(aPassword, aBlockLength);
+	}
+
+
+	private void init(byte[] aPassword, int aBlockLength)
 	{
 		mMessageDigest.reset();
 
-		int blockLength;
-		if (mMessageDigest instanceof SHA512)
-		{
-			blockLength = 128;
-		}
-		else
-		{
-			blockLength = 64;
-		}
-
-		if (aPassword.length > blockLength)
+		if (aPassword.length > aBlockLength)
 		{
 			aPassword = mMessageDigest.digest(aPassword);
 		}
 
-		mInputPad = new byte[blockLength];
+		mInputPad = new byte[aBlockLength];
 
 		System.arraycopy(aPassword, 0, mInputPad, 0, aPassword.length);
 
@@ -69,11 +72,11 @@ public final class HMAC extends MessageDigest implements Cloneable
 
 
 	@Override
-	protected byte [] engineDigest()
+	protected byte[] engineDigest()
 	{
-		byte [] tmp = mMessageDigest.digest();
+		byte[] tmp = mMessageDigest.digest();
 		mMessageDigest.update(mOutputPad);
-		byte [] out = mMessageDigest.digest(tmp);
+		byte[] out = mMessageDigest.digest(tmp);
 
 		engineReset();
 
@@ -104,7 +107,7 @@ public final class HMAC extends MessageDigest implements Cloneable
 
 
 	@Override
-	protected void engineUpdate(byte [] aBuffer, int aOffset, int aLength)
+	protected void engineUpdate(byte[] aBuffer, int aOffset, int aLength)
 	{
 		mMessageDigest.update(aBuffer, aOffset, aLength);
 	}
