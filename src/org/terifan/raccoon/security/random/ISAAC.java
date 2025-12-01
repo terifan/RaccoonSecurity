@@ -33,7 +33,7 @@ public final class ISAAC
 	}
 
 
-	public void setSeed(long aSeed)
+	public synchronized void setSeed(long aSeed)
 	{
 		int[] seed = new int[256];
 		long s = aSeed;
@@ -170,7 +170,7 @@ public final class ISAAC
 	/**
 	 * Returns a random boolean.
 	 */
-	public boolean nextBoolean()
+	public synchronized boolean nextBoolean()
 	{
 		return nextInt() < 0;
 	}
@@ -179,7 +179,7 @@ public final class ISAAC
 	/**
 	 * Returns a random byte.
 	 */
-	public byte nextByte()
+	public synchronized byte nextByte()
 	{
 		return (byte)nextInt();
 	}
@@ -188,7 +188,7 @@ public final class ISAAC
 	/**
 	 * Returns a random integer.
 	 */
-	public int nextInt()
+	public synchronized int nextInt()
 	{
 		if (count == 0)
 		{
@@ -204,7 +204,7 @@ public final class ISAAC
 	 * @param aMaxValue
 	 *   the bound on the random number to be returned. Must be positive.
 	 */
-	public int nextInt(int aMaxValue)
+	public synchronized int nextInt(int aMaxValue)
 	{
 		return Math.abs(nextInt()) % aMaxValue;
 	}
@@ -229,28 +229,28 @@ public final class ISAAC
 	/**
 	 * Returns a random long.
 	 */
-	public long nextLong()
+	public synchronized long nextLong()
 	{
 		return (((long)nextInt()) << 32) + nextInt();
 	}
 
 
 	// copy from java.util.Random
-	public double nextDouble()
+	public synchronized double nextDouble()
 	{
 		return (((long)nextInt(1 << 26) << 27) + nextInt(1 << 27)) / (double)(1L << 53);
     }
 
 
 	// copy from java.util.Random
-	public float nextFloat()
+	public synchronized float nextFloat()
 	{
         return nextInt(1 << 24) / ((float)(1 << 24));
     }
 
 
 	// copy from java.util.Random
-    public double nextGaussian()
+    public synchronized double nextGaussian()
 	{
 		if (haveNextNextGaussian)
 		{
@@ -278,7 +278,7 @@ public final class ISAAC
 	/**
 	 * Fills the buffer supplied with random bytes.
 	 */
-	public byte[] nextBytes(byte[] aBuffer)
+	public synchronized byte[] nextBytes(byte[] aBuffer)
 	{
 		nextBytes(aBuffer, 0, aBuffer.length);
 		return aBuffer;
@@ -288,7 +288,7 @@ public final class ISAAC
 	/**
 	 * Fills the buffer supplied with random bytes.
 	 */
-	public byte[] nextBytes(byte[] aBuffer, int aOffset, int aLength)
+	public synchronized byte[] nextBytes(byte[] aBuffer, int aOffset, int aLength)
 	{
 		while (aLength >= 4)
 		{
@@ -328,7 +328,7 @@ public final class ISAAC
 	 * @return
 	 *    an integer value ranging from 0 to the length of the provided probabilities array.
 	 */
-	public int nextProb(double ... aProbabilties)
+	public synchronized int nextProb(double ... aProbabilties)
 	{
 		double v = nextInt(Integer.MAX_VALUE) / (double)Integer.MAX_VALUE;
 

@@ -79,7 +79,7 @@ public abstract class CipherMode
 	}
 
 
-	static void xor(byte[] aDstBuffer, int aDstOffset, int aLength, byte[] aXorBuffer, int aXorOffset)
+	public static void xor(byte[] aDstBuffer, int aDstOffset, int aLength, byte[] aXorBuffer, int aXorOffset)
 	{
 		for (int i = 0; i < aLength; i++)
 		{
