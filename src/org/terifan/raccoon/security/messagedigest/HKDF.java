@@ -1,4 +1,4 @@
-package org.terifan.raccoon.v0.security.messagedigest;
+package org.terifan.raccoon.security.messagedigest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
